@@ -16,7 +16,7 @@ WORKDIR /root/
 COPY --from=builder /app/app .
 
 COPY templates/ ./templates/
-
+COPY static/ ./static/
 EXPOSE 8080
 
 CMD ["./app"]
