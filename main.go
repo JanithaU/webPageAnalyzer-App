@@ -3,15 +3,18 @@ package main
 import (
 	"fmt"
 	"html/template"
-	"log"
 	"net/http"
 	"regexp"
 	"strings"
 	"sync"
 	"time"
 
+	"github.com/sirupsen/logrus"
+
 	"github.com/PuerkitoBio/goquery"
 )
+
+var log = logrus.New()
 
 type AnalysisResults struct {
 	Url               string
@@ -124,7 +127,7 @@ func analyzePage(url string) (*AnalysisResults, error) {
 	}()
 
 	for results := range ch {
-		log.Printf("URL: %v, External(url): %v, Inaccessible: %v  ", results.URL, results.isExternal, results.isInaccessible)
+		log.Infof("URL: %v, External(url): %v, Inaccessible: %v  ", results.URL, results.isExternal, results.isInaccessible)
 
 	}
 
@@ -143,11 +146,12 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		r.ParseForm()
 		url := r.FormValue("url")
 
-		log.Println("Fetching Started for Url:", url)
+		log.Info("Fetching Started for Url:", url)
 		results, err := analyzePage(url)
 		if err != nil {
 			// http.Error(w, "Error analyzing page: "+err.Error(), http.StatusInternalServerError)
 			// return
+			log.Error("Error analyzing page: " + err.Error())
 			results = &AnalysisResults{
 				ErrorMessage: "Error analyzing page: " + err.Error(),
 			}
@@ -155,14 +159,16 @@ func handler(w http.ResponseWriter, r *http.Request) {
 
 		tmpl, err := template.ParseFiles("templates/result.html")
 		if err != nil {
+			log.Error(w, "Error parsing template: "+err.Error(), http.StatusInternalServerError)
 			http.Error(w, "Error parsing template: "+err.Error(), http.StatusInternalServerError)
 			return
 		} else {
-			log.Println("Fetching Done for Url:", url)
+			log.Info("Fetching Done for Url:", url)
 		}
 
 		err = tmpl.Execute(w, results)
 		if err != nil {
+			log.Error(w, "Error rendering template: "+err.Error(), http.StatusInternalServerError)
 			http.Error(w, "Error rendering template: "+err.Error(), http.StatusInternalServerError)
 		}
 	} else {
@@ -173,7 +179,9 @@ func handler(w http.ResponseWriter, r *http.Request) {
 func main() {
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 	http.HandleFunc("/", handler)
-	log.Println("Starting server on :8080...")
+
+	log.SetFormatter(&logrus.TextFormatter{})
+	log.Info("Starting server on :8080...")
 	if err := http.ListenAndServe(":8080", nil); err != nil {
 		log.Fatal("Server failed:", err)
 	}
