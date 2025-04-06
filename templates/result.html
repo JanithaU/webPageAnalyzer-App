@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title> Analysis Results</title>
+    <!-- Link to the external CSS -->
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Page Analysis Results</h1>
+
+        <table class="result-table">
+            <tr>
+                <th>Url</th>
+                <td>{{.Url}}</td>
+            </tr>
+            <tr>
+                <th>HTML Version</th>
+                <td>{{.HTMLVersion}}</td>
+            </tr>
+            <tr>
+                <th>Title</th>
+                <td>{{.Title}}</td>
+            </tr>
+            <tr>
+                <th>Headings</th>
+                <td>
+                    <ul>
+                        {{range $level, $count := .HeadingCounts}}
+                            <li>{{$level}}: {{$count}}</li>
+                        {{end}}
+                    </ul>
+                </td>
+            </tr>
+            <tr>
+                <th>Internal Links</th>
+                <td>{{.InternalLinks}}</td>
+            </tr>
+            <tr>
+                <th>External Links</th>
+                <td>{{.ExternalLinks}}</td>
+            </tr>
+            <tr>
+                <th>Inaccessible Links</th>
+                <td>{{.InaccessibleLinks}}</td>
+            </tr>
+            <tr>
+                <th>Login Form Present</th>
+                <td>{{if .LoginFormPresent}}Yes{{else}}No{{end}}</td>
+            </tr>
+        </table>
+
+        <a href="/" class="back-btn">Back to form</a>
+    </div>
+</body>
+</html>
