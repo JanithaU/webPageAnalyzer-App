@@ -9,6 +9,12 @@
     <div class="container">
         <h1>Page Analysis Results</h1>
 
+        {{if .ErrorMessage}}
+        <div style="color: red; font-weight: bold;">
+            {{.ErrorMessage}}
+        </div>
+    {{else}}
+
         <table class="result-table">
             <tr>
                 <th>Url</th>
@@ -49,7 +55,7 @@
                 <td>{{if .LoginFormPresent}}Yes{{else}}No{{end}}</td>
             </tr>
         </table>
-
+        {{end}}
         <a href="/" class="back-btn">Back to form</a>
     </div>
 </body>

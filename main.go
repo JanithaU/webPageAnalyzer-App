@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"html/template"
 	"log"
 	"net/http"
@@ -21,6 +22,7 @@ type AnalysisResults struct {
 	ExternalLinks     int
 	InaccessibleLinks int
 	LoginFormPresent  bool
+	ErrorMessage      string
 }
 
 func isExternal(url, baseURL string) bool {
@@ -38,6 +40,10 @@ func analyzePage(url string) (*AnalysisResults, error) {
 		return nil, err
 	}
 	defer res.Body.Close()
+
+	if res.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("error: received status code %d for URL %s", res.StatusCode, url)
+	}
 
 	doc, err := goquery.NewDocumentFromReader(res.Body)
 	if err != nil {
@@ -140,8 +146,11 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		log.Println("Fetching Started for Url:", url)
 		results, err := analyzePage(url)
 		if err != nil {
-			http.Error(w, "Error analyzing page: "+err.Error(), http.StatusInternalServerError)
-			return
+			// http.Error(w, "Error analyzing page: "+err.Error(), http.StatusInternalServerError)
+			// return
+			results = &AnalysisResults{
+				ErrorMessage: "Error analyzing page: " + err.Error(),
+			}
 		}
 
 		tmpl, err := template.ParseFiles("templates/result.html")
