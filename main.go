@@ -131,10 +131,15 @@ func analyzePage(url string) (*AnalysisResults, error) {
 
 	}
 
-	doc.Find("form").Each(func(i int, s *goquery.Selection) {
-		action, exists := s.Attr("action")
-		if exists && (strings.Contains(action, "login") || strings.Contains(action, "signin")) {
-			results.LoginFormPresent = true
+	doc.Find("*").Each(func(i int, s *goquery.Selection) {
+		attributes := []string{"action", "href", "id", "class"}
+		for _, attr := range attributes {
+			if value, exists := s.Attr(attr); exists {
+				if strings.Contains(value, "login") || strings.Contains(value, "signin") {
+					results.LoginFormPresent = true
+					return // Found a login-related element, no need to continue
+				}
+			}
 		}
 	})
 
