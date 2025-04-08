@@ -2,7 +2,6 @@ package server
 
 import (
 	"net/http"
-
 	"os"
 
 	"github.com/sirupsen/logrus"
@@ -14,20 +13,6 @@ func RunServer() {
 	log.SetFormatter(&logrus.TextFormatter{})
 
 	RegisterRoutes()
-
-	// port, err := strconv.Atoi(os.Getenv("PORT"))
-	// var portAddr string
-	// if err != nil {
-	// 	portAddr = ":8080"
-	// 	log.Info("Using default port 8080")
-	// } else {
-	// 	portAddr = ":" + strconv.Itoa(port)
-	// 	log.Infof("Starting server on  %v", portAddr)
-	// }
-
-	// if err := http.ListenAndServe(portAddr, nil); err != nil {
-	// 	log.Fatal("Server failed:", err)
-	// }
 
 	port := os.Getenv("PORT")
 	if port == "" {

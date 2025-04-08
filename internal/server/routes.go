@@ -15,7 +15,6 @@ func RegisterRoutes() {
 		log.Fatal(err)
 	}
 	statPathJoin := filepath.Join(cwd, "web", "static")
-	// staticPath := filepath.Join("..", "..", "web", "static")
 	staticPath := filepath.Join(statPathJoin)
 	fs := http.FileServer(http.Dir(staticPath))
 	http.Handle("/static/", http.StripPrefix("/static/", fs))

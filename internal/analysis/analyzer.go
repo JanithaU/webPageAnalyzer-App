@@ -28,7 +28,6 @@ type AnalysisResults struct {
 }
 
 func isExternal(link, base string) bool {
-	// return !strings.HasPrefix(url, baseURL)
 	baseURL, err := url.Parse(base)
 	if err != nil {
 		return false

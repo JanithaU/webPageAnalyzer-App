@@ -2,13 +2,11 @@ package handler
 
 import (
 	"net/http"
+	"os"
 	"path/filepath"
 	"text/template"
 
 	"github.com/JanithaU/webPageAnalyzer-App/internal/analysis"
-
-	"os"
-
 	"github.com/sirupsen/logrus"
 )
 
@@ -22,7 +20,6 @@ func AnalyzeHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Construct the absolute path to your template file
-
 	if r.Method == http.MethodPost {
 		r.ParseForm()
 		url := r.FormValue("url")
@@ -36,7 +33,6 @@ func AnalyzeHandler(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 		templatePath := filepath.Join(cwd, "web", "templates", "result.html")
-		// tmpl, err := template.ParseFiles("../../web/templates/result.html")
 		tmpl, err := template.ParseFiles(templatePath)
 		if err != nil {
 			log.Error("Error parsing template: ", err)
@@ -51,9 +47,7 @@ func AnalyzeHandler(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, "Template execution error", http.StatusInternalServerError)
 		}
 	} else {
-		// log.Info("sdf")
 		templatePath := filepath.Join(cwd, "web", "templates", "index.html")
-		// http.ServeFile(w, r, "../../web/templates/index.html")
 		http.ServeFile(w, r, templatePath)
 
 	}
@@ -67,7 +61,6 @@ func NotFoundHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	w.WriteHeader(http.StatusNotFound)
 	templatePath := filepath.Join(cwd, "web", "templates", "404.html")
-	// tmpl, err := template.ParseFiles("../../web/templates/404.html")
 	tmpl, err := template.ParseFiles(templatePath)
 	if err != nil {
 		log.Error("Error rendering template(404): ", err)
