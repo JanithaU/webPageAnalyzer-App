@@ -59,3 +59,14 @@ docker build -t go-web-analyzer .
  ``` 
  docker run -p 8080:8080 go-web-analyzer
  ```
+
+## OR build and run via the Makefile
+#### build and run 
+```
+make run
+```
+
+#### build only (with dependancies)
+```
+make build
+```
