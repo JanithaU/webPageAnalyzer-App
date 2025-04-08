@@ -12,7 +12,7 @@
                 <label for="url">URL :</label>
                 <input type="text" id="url" name="url" required class="form-input" placeholder="https://www.google.com">
             </div>
-            <button type="submit" class="submit-btn">Analyze</button>
+            <button type="submit" class="submit-btn" onclick="this.disabled=true; this.form.submit();">Analyze</button>
         </form>
     </div>
 </body>

@@ -46,7 +46,7 @@ go mod tidy
 
 ### 5. Run the Application
 ```bash
-go run main.go
+go run cmd/web/main.go
 ```
 
 ## OR to run application as a docker
